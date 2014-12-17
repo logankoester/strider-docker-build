@@ -1,6 +1,7 @@
 'use strict';
 
-// We'll create a stream shortly.
+var os = require('os');
+var path = require('path');
 var JSONStream = require('json-stream');
 
 // Export.
@@ -11,7 +12,7 @@ module.exports = {
   //   cb(err, initialized plugin)
   init: function (configuration, job, context, cb) {
     // Where to stash the archived project.
-    var archivePath = '/tmp/archive.tar';
+    var archivePath = path.join(os.tmpdir(), 'archive-docker-build-' + Date.now() + '.tar');
 
     // Get the config (if any.)
     var config = configuration || {};
