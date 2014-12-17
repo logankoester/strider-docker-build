@@ -1,16 +1,21 @@
-// We'll create a stream shortly.
+'use strict';
+
+var path = require('path');
+var fs = require('fs');
 var JSONStream = require('json-stream');
+var Docker = require('dockerode');
+var opt = require('dockerode-optionator');
+var certsFolder = process.env.DOCKER_CERT_PATH;
 
 module.exports = function(archivePath, config) {
   return function (context, done) {
     // Normalise docker-related environment variables
-    var opt = require('dockerode-optionator');
-
     var dOpts = opt.normalizeOptions({}, process.env);
 
+    loadCerts(certsFolder, dOpts);
     context.comment('Connecting to Docker: ' + JSON.stringify(dOpts, null, 4));
 
-    var docker = new (require('dockerode'))(dOpts);
+    var docker = new Docker(dOpts);
 
     docker.buildImage(archivePath, {
       t: config.tag,
@@ -79,5 +84,19 @@ module.exports = function(archivePath, config) {
       ostream.pipe(stream);
     });
   };
-}
+};
 
+function loadCerts(folder, obj) {
+  var certs = ['ca', 'cert', 'key'];
+  var result = obj || {};
+
+  if (!folder) {
+    return result;
+  }
+
+  certs.forEach(function (key) {
+    result[key] = fs.readFileSync(path.join(folder, key + '.pem'));
+  });
+
+  return result;
+}
