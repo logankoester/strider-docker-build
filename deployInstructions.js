@@ -12,7 +12,6 @@ module.exports = function(archivePath, config) {
     // Normalise docker-related environment variables
     var dOpts = opt.normalizeOptions({}, process.env);
 
-    loadCerts(certsFolder, dOpts);
     context.comment('Connecting to Docker: ' + JSON.stringify(dOpts, null, 4));
 
     var docker = new Docker(dOpts);
@@ -85,18 +84,3 @@ module.exports = function(archivePath, config) {
     });
   };
 };
-
-function loadCerts(folder, obj) {
-  var certs = ['ca', 'cert', 'key'];
-  var result = obj || {};
-
-  if (!folder) {
-    return result;
-  }
-
-  certs.forEach(function (key) {
-    result[key] = fs.readFileSync(path.join(folder, key + '.pem'));
-  });
-
-  return result;
-}
