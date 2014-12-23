@@ -3,6 +3,7 @@
 var os = require('os');
 var path = require('path');
 var JSONStream = require('json-stream');
+var build = require('./lib/build');
 
 // Export.
 module.exports = {
@@ -27,7 +28,7 @@ module.exports = {
     };
 
     // Add the build instructions here.
-    options[config.buildPhase] = require('./deployInstructions')(archivePath, config);
+    options[config.buildPhase] = build(archivePath, config);
 
     // Register the plugin and it's options.
     cb(null, options);
