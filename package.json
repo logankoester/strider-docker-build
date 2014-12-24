@@ -28,7 +28,6 @@
     }
   },
   "dependencies": {
-    "anymatch": "^1.1.0",
     "dockerode": "^2.0.2",
     "dockerode-optionator": "^1.1.1",
     "json-stream": "^0.2.1",
